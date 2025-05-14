@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saisir un voyage - EcoRide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="index.html">EcoRide</a>
+        </div>
+    </nav>
+
+    <!-- Formulaire pour saisir un voyage -->
+    <main class="container mt-5">
+        <h1 class="text-center mb-4">Saisir un Voyage</h1>
+
+        <form id="tripForm">
+            <div class="mb-3">
+                <label for="departure" class="form-label">Ville de départ</label>
+                <input type="text" class="form-control" id="departure" placeholder="Ex : Paris" required>
+            </div>
+            <div class="mb-3">
+                <label for="arrival" class="form-label">Ville d'arrivée</label>
+                <input type="text" class="form-control" id="arrival" placeholder="Ex : Lyon" required>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Prix (€)</label>
+                <input type="number" class="form-control" id="price" placeholder="Ex : 20" required>
+            </div>
+            <div class="mb-3">
+                <label for="vehicle" class="form-label">Véhicule</label>
+                <select id="vehicle" class="form-select" required>
+                    <option value="">Sélectionner un véhicule</option>
+                    <!-- Liste des véhicules déjà associés à l'utilisateur -->
+                    <option value="Tesla Model 3">Tesla Model 3</option>
+                    <option value="Peugeot 208">Peugeot 208</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Saisir le voyage</button>
+        </form>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="text-center bg-dark text-white py-4 mt-5">
+        <p>Contactez-nous : <a href="mailto:contact@ecoride.com" class="text-info">contact@ecoride.com</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+<script>
+document.getElementById('tripForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Empêche l'envoi du formulaire
+
+    const departure = document.getElementById('departure').value;
+    const arrival = document.getElementById('arrival').value;
+    const price = document.getElementById('price').value;
+    const vehicle = document.getElementById('vehicle').value;
+
+    // Validation des champs
+    if (!departure || !arrival || !price || !vehicle) {
+        alert("Veuillez remplir tous les champs !");
+        return;
+    }
+
+    // Affichage des données saisies
+    console.log("Voyage enregistré : ");
+    console.log("Départ :", departure);
+    console.log("Arrivée :", arrival);
+    console.log("Prix :", price + "€");
+    console.log("Véhicule :", vehicle);
+
+    // Vous pouvez ici envoyer les données au serveur pour enregistrer le voyage
+    // Exemple : appel à l'API de création de voyage (backend)
+    // fetch('/api/create-trip', { method: 'POST', body: JSON.stringify({ departure, arrival, price, vehicle }) });
+
+    alert("Voyage créé avec succès !");
+
+    // Réinitialiser le formulaire
+    document.getElementById('tripForm').reset();
+});
+</script>
+
+<!-- Si l'utilisateur n'a pas de véhicule sélectionné, il peut ajouter un nouveau véhicule -->
+<div class="mb-3" id="addVehicleSection" style="display: none;">
+    <label for="newVehicle" class="form-label">Ajouter un véhicule</label>
+    <input type="text" class="form-control" id="newVehicle" placeholder="Ex : Audi Q7" required>
+</div>
+
+<script>
+document.getElementById('vehicle').addEventListener('change', function () {
+    const vehicleSelect = document.getElementById('vehicle');
+    const addVehicleSection = document.getElementById('addVehicleSection');
+
+    if (vehicleSelect.value === "") {
+        // Si aucun véhicule n'est sélectionné, afficher le champ pour ajouter un véhicule
+        addVehicleSection.style.display = "block";
+    } else {
+        // Sinon, cacher l'option d'ajouter un véhicule
+        addVehicleSection.style.display = "none";
+    }
+});
+</script>
+
+<script>
+app.post('/api/create-ride', (req, res) => {
+    const { departure, arrival, price, vehicle, userId } = req.body;
+    const query = 'INSERT INTO rides (departure, arrival, price, vehicle, user_id) VALUES (?, ?, ?, ?, ?)';
+    
+    db.query(query, [departure, arrival, price, vehicle, userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la création du covoiturage.' });
+        }
+        res.status(201).json({ message: 'Covoiturage créé avec succès.' });
+    });
+});
+</script>

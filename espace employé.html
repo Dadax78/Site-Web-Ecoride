@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Employé - EcoRide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="index.html">EcoRide</a>
+        </div>
+    </nav>
+
+    <!-- Espace Employé -->
+    <main class="container mt-5">
+        <h1 class="text-center mb-4">Espace Employé</h1>
+
+        <!-- Liste des covoiturages problématiques -->
+        <div id="problematicRides">
+            <h3>Covoiturages Signalés</h3>
+            <!-- Exemple de covoiturage problématique -->
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="vehicle_image.jpg" class="img-fluid rounded-start" alt="Véhicule">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Covoiturage Beauvais → Lille</h5>
+                            <p><strong>Conducteur :</strong> Marcel Dupont</p>
+                            <p><strong>Problème :</strong> Comportement inapproprié du conducteur</p>
+                            <p><strong>Passager :</strong> Marie</p>
+                            <button class="btn btn-danger" onclick="suspendUser(1)">Suspension utilisateur</button>
+                            <button class="btn btn-info" onclick="viewDetails(1)">Voir détails</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Si aucun covoiturage problématique -->
+            <div id="noProblematicRides" class="alert alert-info" style="display: none;">
+                Aucun covoiturage signalé pour le moment.
+            </div>
+        </div>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="text-center bg-dark text-white py-4 mt-5">
+        <p>Contactez-nous : <a href="mailto:contact@ecoride.com" class="text-info">contact@ecoride.com</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+const problematicRides = [
+    {
+        rideId: 1,
+        departure: "Beauvais",
+        arrival: "Lille",
+        driver: "Marcel DUpont",
+        passenger: "Marie",
+        issue: "Comportement inapproprié",
+        vehicleImage: "vehicle_image.jpg",
+        userId: 2
+    },
+    {
+        rideId: 2,
+        departure: "Marseille",
+        arrival: "Nice",
+        driver: "Alice Dubois",
+        passenger: "Alex",
+        issue: "Annulation répétée",
+        vehicleImage: "vehicle_image2.jpg",
+        userId: 3
+    }
+];
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const problematicRidesContainer = document.getElementById('problematicRides');
+    const noProblematicRidesContainer = document.getElementById('noProblematicRides');
+
+    // Afficher les covoiturages signalés
+    if (problematicRides.length > 0) {
+        noProblematicRidesContainer.style.display = "none"; // Masquer le message "Pas de covoiturages problématiques"
+        problematicRides.forEach(ride => {
+            const rideCard = `
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="${ride.vehicleImage}" class="img-fluid rounded-start" alt="Véhicule">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Covoiturage ${ride.departure} → ${ride.arrival}</h5>
+                                <p><strong>Conducteur :</strong> ${ride.driver}</p>
+                                <p><strong>Problème :</strong> ${ride.issue}</p>
+                                <p><strong>Passager :</strong> ${ride.passenger}</p>
+                                <button class="btn btn-danger" onclick="suspendUser(${ride.userId})">Suspension utilisateur</button>
+                                <button class="btn btn-info" onclick="viewDetails(${ride.rideId})">Voir détails</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <script>
+            
+            problematicRidesContainer.innerHTML += rideCard; // Ajouter la carte de covoiturage problématique à la liste
+        });
+    } else {
+        // Si aucun covoiturage n'est signalé
+        problematicRidesContainer.style.display = "none"; // Cacher l'historique
+        noProblematicRidesContainer.style.display = "block"; // Afficher le message "Pas de covoiturages problématiques"
+    }
+});
+</script
+unction suspendUser(userId) {
+    alert(`L'utilisateur avec l'ID ${userId} a été suspendu.`);
+
+    // Code pour suspendre l'utilisateur (backend)
+    // Exemple : appel à une API pour suspendre l'utilisateur
+    // fetch('/api/suspend-user', { method: 'POST', body: JSON.stringify({ userId }) });
+
+    // Logique de suspension simulée ici
+}
+
+// Fonction pour voir les détails du covoiturage
+function viewDetails(rideId) {
+    alert(`Affichage des détails pour le covoiturage ${rideId}.`);
+
+    // Code pour afficher les détails du covoiturage (backend)
+    // Exemple : rediriger vers une page de détails
+    // window.location.href = `/ride-details.html?rideId=${rideId}`;
+}
+</script>
+
+<script>
+app.get('/api/admin/problematic-rides', (req, res) => {
+    const query = 'SELECT * FROM rides WHERE status = "problematic"';
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la récupération des covoiturages signalés.' });
+        }
+        res.json(results);
+    });
+});
+
+app.post('/api/admin/suspend-user', (req, res) => {
+    const { userId } = req.body;
+    const query = 'UPDATE users SET status = "suspended" WHERE id = ?';
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la suspension de l\'utilisateur.' });
+        }
+        res.json({ message: 'Utilisateur suspendu avec succès.' });
+    });
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

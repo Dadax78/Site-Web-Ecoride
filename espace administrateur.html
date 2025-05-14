@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Administrateur - EcoRide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="index.html">EcoRide</a>
+        </div>
+    </nav>
+
+    <!-- Espace Administrateur -->
+    <main class="container mt-5">
+        <h1 class="text-center mb-4">Espace Administrateur</h1>
+
+        <!-- Gestion des utilisateurs -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Gérer les Utilisateurs</h5>
+                <button class="btn btn-primary" onclick="viewUsers()">Voir les utilisateurs</button>
+                <button class="btn btn-danger" onclick="suspendUser()">Suspendre un utilisateur</button>
+            </div>
+        </div>
+
+        <!-- Gestion des employés -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Gérer les Employés</h5>
+                <button class="btn btn-primary" onclick="viewEmployees()">Voir les employés</button>
+                <button class="btn btn-danger" onclick="suspendEmployee()">Suspendre un employé</button>
+            </div>
+        </div>
+
+        <!-- Statistiques des covoiturages -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Statistiques des Covoiturages</h5>
+                <button class="btn btn-info" onclick="viewStats()">Voir les statistiques</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="text-center bg-dark text-white py-4 mt-5">
+        <p>Contactez-nous : <a href="mailto:contact@ecoride.com" class="text-info">contact@ecoride.com</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+// Fonction pour afficher la liste des utilisateurs
+function viewUsers() {
+    alert("Affichage de la liste des utilisateurs.");
+
+    // Logique pour récupérer la liste des utilisateurs via une API backend
+    // Exemple : fetch('/api/admin/users').then(response => response.json()).then(data => {});
+
+    // Affichage simulé ici
+    console.log("Liste des utilisateurs récupérée.");
+}
+
+// Fonction pour suspendre un utilisateur
+function suspendUser() {
+    const userId = prompt("Entrez l'ID de l'utilisateur à suspendre :");
+
+    if (userId) {
+        alert(`L'utilisateur avec l'ID ${userId} a été suspendu.`);
+
+        // Logique pour suspendre l'utilisateur via une API backend
+        // Exemple : fetch('/api/admin/suspend-user', { method: 'POST', body: JSON.stringify({ userId }) });
+
+        console.log(`Utilisateur ${userId} suspendu.`);
+    } else {
+        alert("Aucun ID d'utilisateur fourni.");
+    }
+}
+
+// Fonction pour afficher la liste des employés
+function viewEmployees() {
+    alert("Affichage de la liste des employés.");
+
+    // Logique pour récupérer la liste des employés via une API backend
+    // Exemple : fetch('/api/admin/employees').then(response => response.json()).then(data => {});
+
+    console.log("Liste des employés récupérée.");
+}
+
+// Fonction pour suspendre un employé
+function suspendEmployee() {
+    const employeeId = prompt("Entrez l'ID de l'employé à suspendre :");
+
+    if (employeeId) {
+        alert(`L'employé avec l'ID ${employeeId} a été suspendu.`);
+
+        // Logique pour suspendre l'employé via une API backend
+        // Exemple : fetch('/api/admin/suspend-employee', { method: 'POST', body: JSON.stringify({ employeeId }) });
+
+        console.log(`Employé ${employeeId} suspendu.`);
+    } else {
+        alert("Aucun ID d'employé fourni.");
+    }
+}
+
+// Fonction pour voir les statistiques des covoiturages
+function viewStats() {
+    alert("Affichage des statistiques des covoiturages.");
+
+    // Logique pour récupérer les statistiques via une API backend
+    // Exemple : fetch('/api/admin/statistics').then(response => response.json()).then(data => {});
+
+    console.log("Statistiques des covoiturages récupérées.");
+}
+</script>
+
+<script>
+app.get('/api/admin/users', (req, res) => {
+    // Logique pour récupérer tous les utilisateurs
+    db.query('SELECT * FROM users', (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs.' });
+        }
+        res.json(results);
+    });
+});
+</script>
+
+<script>
+app.post('/api/admin/suspend-user', (req, res) => {
+    const { userId } = req.body;
+
+    // Logique pour suspendre l'utilisateur
+    db.query('UPDATE users SET status = "suspended" WHERE id = ?', [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la suspension de l\'utilisateur.' });
+        }
+        res.json({ message: 'Utilisateur suspendu avec succès.' });
+    });
+});
+</script>
+
+<script>
+app.get('/api/admin/employees', (req, res) => {
+    // Logique pour récupérer tous les employés
+    db.query('SELECT * FROM employees', (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la récupération des employés.' });
+        }
+        res.json(results);
+    });
+});
+</script>
+
+<script>
+app.post('/api/admin/suspend-employee', (req, res) => {
+    const { employeeId } = req.body;
+
+    // Logique pour suspendre l'employé
+    db.query('UPDATE employees SET status = "suspended" WHERE id = ?', [employeeId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la suspension de l\'employé.' });
+        }
+        res.json({ message: 'Employé suspendu avec succès.' });
+    });
+});
+</script>
+
+<script>
+app.get('/api/admin/statistics', (req, res) => {
+    const query = `
+        SELECT 
+            (SELECT COUNT(*) FROM rides) AS rideCount,
+            (SELECT COUNT(DISTINCT user_id) FROM users) AS userCount
+    `;
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la récupération des statistiques.' });
+        }
+        res.json(results);
+    });
+});
+
+</script>

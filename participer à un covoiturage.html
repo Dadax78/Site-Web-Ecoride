@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participer à un Covoiturage</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="index.html">EcoRide</a>
+        </div>
+    </nav>
+<!-- Contenu principal -->
+<main class="container mt-4">
+    <h1 class="text-center mb-4">Participer à un covoiturage</h1>
+    <h1 class="text-center mb-4">Organisé par :</h1>
+<div class="card">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="file:///C:/Users/GIGABYTE/Pictures/Capture%20d%E2%80%99%C3%A9cran%202024-11-27%20162133.jpg" class="img-fluid rounded-start" alt="Photo du chauffeur">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">Jean Dupont (4.5★)</h5>
+                <p class="card-text"><strong>Départ :</strong> Ville A</p>
+                <p class="card-text"><strong>Arrivée :</strong> Ville B</p>
+                <p class="card-text"><strong>Date :</strong> 2024-11-25</p>
+                <p class="card-text"><strong>Prix :</strong> 15€</p>
+                <p class="card-text"><strong>Durée :</strong> 2h30</p>
+                <p class="card-text"><small class="text-muted">Voiture électrique 🌱 : Tesla Model 3 (2021)</small></p>
+                <p class="card-text"><strong>Places restantes :</strong> 2</p>
+                
+                <!-- Vérification des crédits de l'utilisateur -->
+                <p id="userCredits" class="card-text"><strong>Crédits disponibles :</strong> 20</p>
+                
+                <!-- Bouton pour participer -->
+                <button id="participateBtn" class="btn btn-success" onclick="participer()">Participer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fenêtre de confirmation -->
+<div id="confirmationModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3>Confirmer votre participation</h3>
+        <p>Êtes-vous sûr de vouloir participer à ce covoiturage ? Vous utiliserez 15 crédits.</p>
+        <button id="confirmBtn" class="btn btn-primary">Confirmer</button>
+        <button id="cancelBtn" class="btn btn-secondary">Annuler</button>
+    </div>
+</div>
+
+<SCript>
+// Données fictives (ceci serait normalement récupéré via un backend)
+let userCredits = 20;  // Crédits de l'utilisateur
+let ridePrice = 15;    // Prix du covoiturage   
+let availableSeats = 2;  // Places restantes pour ce covoiturage
+
+// Fonction pour gérer la participation
+function participer() {
+    // Vérifier si l'utilisateur a suffisamment de crédits
+    if (userCredits < ridePrice) {
+        alert("Vous n'avez pas suffisamment de crédits pour participer à ce covoiturage.");
+        return;
+    }
+
+    // Vérifier si des places sont disponibles
+    if (availableSeats <= 0) {
+        alert("Il n'y a plus de places disponibles pour ce covoiturage.");
+        return;
+    }
+
+    // Afficher la fenêtre de confirmation
+    document.getElementById('confirmationModal').style.display = "block";
+}
+
+// Fonction pour confirmer la participation
+document.getElementById('confirmBtn').addEventListener('click', function() {
+    // Mettre à jour les crédits de l'utilisateur
+    userCredits -= ridePrice;
+    
+    // Mettre à jour le nombre de places disponibles
+    availableSeats--;
+
+    // Mettre à jour l'interface pour afficher les nouvelles informations
+    document.getElementById('userCredits').textContent = `Crédits disponibles : ${userCredits}`;
+    
+    // Fermer la fenêtre de confirmation
+    document.getElementById('confirmationModal').style.display = "none";
+
+    // Informer l'utilisateur de la participation réussie
+    alert("Vous avez bien été ajouté comme passager à ce covoiturage !");
+});
+
+// Fonction pour annuler la participation
+document.getElementById('cancelBtn').addEventListener('click', function() {
+    // Fermer la fenêtre de confirmation sans rien changer
+    document.getElementById('confirmationModal').style.display = "none";
+});
+</SCript>
+
+<script>
+app.post('/api/participate', (req, res) => {
+    const { userId, rideId } = req.body;
+    const query = 'INSERT INTO passengers (user_id, ride_id) VALUES (?, ?)';
+    
+    db.query(query, [userId, rideId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de l\'inscription au covoiturage.' });
+        }
+        res.json({ message: 'Participation enregistrée avec succès.' });
+    });
+});
+</script>
